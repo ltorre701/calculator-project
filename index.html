@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+    * {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background-image: url("https://i.pinimg.com/originals/22/2a/03/222a0332bd69330e9ac4109495a420ca.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: hidden;
+}
+div.container {
+  width: 80%;
+  height: 100vh;
+  background-color: gray;
+  margin: auto;
+  box-shadow: 10px 10px 8px 10px black, 1px 1px 10px 1px black inset;
+}
+div.p1 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 2%;
+}
+div.parent {
+  border: 3px groove gray;
+  height: 80%;
+  box-sizing: border-box;
+}
+div.p1 {
+  width: 60%;
+  float: left;
+}
+div.p2 {
+  width: 40%;
+  float: right;
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+  gap: 2%;
+}
+input#display {
+  height: 10%;
+  width: 80%;
+  margin-left: 10%;
+  padding-left: 5%;
+  font-size: 2rem;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(white 20%, rgba(100, 100, 100, 0.2));
+}
+#equal {
+  height: 20%;
+  flex: 2 0 60%;
+  order: 10;
+  font-size: 2.5rem;
+  color: white;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  border-radius: 20%;
+  background-color: #64e0f0;
+  opacity: 0.5;
+  box-shadow: 5px 5px 1px black;
+  cursor: pointer;
+}
+.number-button:hover,
+.number-button2:hover,
+#equal:hover {
+  color: lightgreen;
+}
+.number-button {
+  height: 20%;
+  font-size: 2.5rem;
+  color: white;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  flex: 0 0 30%;
+  border-radius: 40%;
+  background-color: #64e0f0;
+  opacity: 0.5;
+  box-shadow: 5px 5px 1px black;
+  cursor: pointer;
+}
+button.number-buttons2 {
+  width: 40%;
+  font-size: 2.5rem;
+  color: white;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  flex: 0 0 20%;
+  border-radius: 40%;
+  background-color: #64e0f0;
+  opacity: 0.5;
+  box-shadow: 5px 5px 1px black;
+  cursor: pointer;
+}
+img#purple-imposter {
+  position: absolute;
+  height: 50px;
+  left: 10px;
+  top: 500px;
+  transform: rotate(-70deg);
+}
+img#red-imposter {
+  position: absolute;
+  height: 50px;
+  left: 94vw;
+  top: 50px;
+  transform: rotate(50deg);
+}
+button#clear {
+  background: linear-gradient(coral, lightblue);
+}
+button#clear:hover {
+  color: red;
+}
+</style>
+</head>
+<body>
+    <div class="container">
+  <input type="text" id="display" maxLength="10" disabled>
+  <div class="parent p1 flex" id="buttons1">
+    <button class="operator input-button" id="equal" type="button">=</button>
+  </div>
+  <div class="parent p2 flex">
+    <button class="number-buttons2 operator" type="button" id="add" data-value="+">+</button>
+    <button class="number-buttons2 operator" type="button" id="subtract" data-value="-">−</button>
+    <button class="number-buttons2 operator" type="button" id="divide" data-value="/">÷</button>
+    <button class="number-buttons2 operator" type="button" id="multiply" data-value="*">×</button>
+    <button class="number-buttons2 operator" type="button" id="clear">C</button>
+  </div>
+</div>
+<img src="https://i.pinimg.com/1200x/57/ee/55/57ee551fcac5a84dec232d48b9306dcf.jpg" alt="imposter" id="purple-imposter">
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxKKLuscFtHc58JhPoG4pJtrarNYfUj6o3tYiITlHmiEbDsO2LzoXhOj5C1Z3Eo-TY4i0&usqp=CAU" alt="red-imposter" id="red-imposter">
+    <script>let tempNumber = null;
+let firstNumber = null;
+let secondNumber = null;
+let operation = null;
+let result = null;
+
+const clearButton = document.getElementById("clear");
+const equalButton = document.getElementById("equal");
+const addButton = document.getElementById("add");
+const minusButton = document.getElementById("subtract");
+const divideButton = document.getElementById("divide");
+const multiplyButton = document.getElementById("multiply");
+const resultDisplay = document.getElementById("display");
+
+for (let i = 0; i < 10; i++) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.classList.add("number-button");
+  button.classList.add("input-button");
+  button.textContent = i;
+  button.setAttribute("data-value", i);
+  if (i === 0) {
+    button.style.order = 1;
+  }
+  buttons1.appendChild(button);
+}
+
+const numberButtons = document.querySelectorAll(".number-button");
+let maxLength = resultDisplay.getAttribute("maxLength");
+resultDisplay.value = "0";
+
+numberButtons.forEach((button, index) => {
+  let dataValue = parseInt(button.getAttribute("data-value"));
+  button.addEventListener("click", function (event) {
+    console.log(resultDisplay.value.length);
+    if (resultDisplay.value.length < maxLength) {
+      const tempNumber = dataValue;
+      console.log("temp number is: " + tempNumber);
+      if (operation === null) {
+        if (firstNumber === null || firstNumber === 0) {
+          firstNumber = tempNumber;
+        } else {
+          firstNumber = parseInt(
+    firstNumber.toString().concat(tempNumber.toString())
+          );
+        }
+        resultDisplay.value = firstNumber.toString();
+      } else {
+        if (secondNumber === null || secondNumber === 0) {
+          secondNumber = tempNumber;
+        } else {
+          secondNumber = parseInt(
+            secondNumber.toString().concat(tempNumber.toString())
+          );
+        }
+        resultDisplay.value = secondNumber.toString();
+      }
+      console.log("firstNumber is: " + firstNumber);
+      console.log("secondNumber is: " + secondNumber);
+      console.log("operation is: " + operation);
+    }
+  });
+});
+
+function clearValues() {
+  tempNumber = null;
+  firstNumber = null;
+  secondNumber = null;
+  operation = null;
+  result = null;
+  resultDisplay.value = 0;
+}
+
+clearButton.addEventListener("click", function () {
+  clearValues();
+});
+
+const operatorButtons = document.querySelectorAll(".operator");
+
+operatorButtons.forEach((button) => {
+  // console.log(button);
+  button.addEventListener("click", function (event) {
+    // console.log(event);
+    const thisOperation = event.target.id;
+    console.log(thisOperation);
+
+    if (firstNumber !== null && secondNumber === null) {
+      switch (thisOperation) {
+        case "add":
+          operation = "+";
+          break;
+        case "subtract":
+          operation = "-";
+          break;
+        case "divide":
+          operation = "/";
+          break;
+        case "multiply":
+          operation = "*";
+          break;
+      }
+      resultDisplay.value = operation;
+    }
+  });
+});
+
+equalButton.addEventListener("click", function (event) {
+  if (secondNumber !== null) {
+    switch (operation) {
+      case "+":
+        result = firstNumber + secondNumber;
+        break;
+      case "-":
+        result = firstNumber - secondNumber;
+        break;
+      case "*":
+        result = firstNumber * secondNumber;
+        break;
+      case "/":
+        result = firstNumber / secondNumber;
+        break;
+    }
+    resultDisplay.value = result;
+  }
+});
+</script>
+</body>
+</html>
